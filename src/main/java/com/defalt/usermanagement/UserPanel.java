@@ -1,15 +1,42 @@
 package com.defalt.usermanagement;
+
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
 import javax.swing.*;
+
 public class UserPanel extends javax.swing.JPanel {
+
     private DefaultListModel model;
+    private int index = -1;
+
     /**
      * Creates new form userPanel
      */
     public UserPanel() {
         initComponents();
-        model = new DefaultListModel();
-        model.addAll(UserService.getUser());
+        model = new DefaultListModel<User>();
         userList.setModel(model);
+        refresh();
+        disbleEditUI();
+    }
+
+    public void disbleEditUI() {
+        inputUsername.setEnabled(false);
+        inputPassword.setEnabled(false);
+        saveButton.setEnabled(false);
+        cancelButton.setEnabled(false);
+    }
+
+    public void enableEditUI() {
+        inputUsername.setEnabled(true);
+        inputPassword.setEnabled(true);
+        saveButton.setEnabled(true);
+        cancelButton.setEnabled(true);
+    }
+
+    public void refresh() {
+        model.clear();
+        model.addAll(UserService.getUser());
     }
 
     /**
@@ -90,10 +117,25 @@ public class UserPanel extends javax.swing.JPanel {
         jScrollPane1.setViewportView(userList);
 
         newButton.setText("New");
+        newButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newButtonActionPerformed(evt);
+            }
+        });
 
         editButton.setText("Edit");
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editButtonActionPerformed(evt);
+            }
+        });
 
         deleteButton.setText("Delete");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -151,8 +193,58 @@ public class UserPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_inputUsernameActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        // TODO add your handling code here:
+        if (index < 0) {//New
+            String username = inputUsername.getText();
+            String password = new String(inputPassword.getPassword());
+            User user = new User(username, password);
+            UserService.addUser(user);
+            refresh();
+            disbleEditUI();
+        } else {//Edit
+            String username = inputUsername.getText();
+            String password = new String(inputPassword.getPassword());
+            User user = new User(username, password);
+            UserService.updateUser(index, user);
+            refresh();
+            disbleEditUI();
+        }
+
     }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void newButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newButtonActionPerformed
+        enableEditUI();
+        inputUsername.requestFocus();
+        index = -1;
+
+    }//GEN-LAST:event_newButtonActionPerformed
+
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        index = userList.getSelectedIndex();
+        if (index < 0) {
+            return;
+        }
+        User user = UserService.getUser(index);
+        inputUsername.setText(user.getUserName());
+        inputPassword.setText(user.getPassword());
+        enableEditUI();
+        inputUsername.requestFocus();
+
+    }//GEN-LAST:event_editButtonActionPerformed
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        index = userList.getSelectedIndex();
+        if (index < 0) {
+            return;
+        }
+        User user = UserService.getUser(index);
+        int reply = JOptionPane.showConfirmDialog(null, "Delete "
+                + user.getUserName() + " !!!", "Warning", JOptionPane.YES_NO_OPTION);
+        if (reply == JOptionPane.YES_OPTION) {
+            UserService.delUser(index);
+            refresh();
+        }
+
+    }//GEN-LAST:event_deleteButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
