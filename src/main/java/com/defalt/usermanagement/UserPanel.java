@@ -21,6 +21,7 @@ public class UserPanel extends javax.swing.JPanel {
     }
 
     public void disbleEditUI() {
+        clearTextField();
         inputUsername.setEnabled(false);
         inputPassword.setEnabled(false);
         saveButton.setEnabled(false);
@@ -37,6 +38,11 @@ public class UserPanel extends javax.swing.JPanel {
     public void refresh() {
         model.clear();
         model.addAll(UserService.getUser());
+    }
+
+    public void clearTextField() {
+        inputUsername.setText("");
+        inputPassword.setText("");
     }
 
     /**
@@ -80,6 +86,11 @@ public class UserPanel extends javax.swing.JPanel {
         });
 
         cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -237,14 +248,18 @@ public class UserPanel extends javax.swing.JPanel {
             return;
         }
         User user = UserService.getUser(index);
-        int reply = JOptionPane.showConfirmDialog(null, "Delete "
-                + user.getUserName() + " !!!", "Warning", JOptionPane.YES_NO_OPTION);
+        int reply = JOptionPane.showConfirmDialog(null, "Are you sure?\nUser \""
+                + user.getUserName() + "\" will delete this process cannot be undone!!!", "Delete User", JOptionPane.YES_NO_OPTION);
         if (reply == JOptionPane.YES_OPTION) {
             UserService.delUser(index);
             refresh();
         }
 
     }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        disbleEditUI();
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
