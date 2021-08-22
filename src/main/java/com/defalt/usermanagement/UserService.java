@@ -48,5 +48,12 @@ public class UserService {
 
     public static void loadData() {
 
+    }public static User auth(String userName,String password){
+        for(int i=0;i<userList.size();i++){
+            User user = userList.get(i);
+            if(user.getUserName().equals(userName)&&user.getPassword().equals(password)){
+                return user;
+            }
+        }return null;
     }
 }
