@@ -16,6 +16,7 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
+        UserService.loadData();
         scrMainPanel.setViewportView(new LoginPanel(this));
         disbleUserStatus();
     }public void disbleUserStatus(){

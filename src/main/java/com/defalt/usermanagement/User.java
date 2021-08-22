@@ -1,6 +1,6 @@
 package com.defalt.usermanagement;
-
-public class User {
+import java.io.*;
+public class User implements Serializable{
     private String userName,password;
     public User(String userName,String password){
         this.userName=userName;
