@@ -12,7 +12,7 @@ public class UserService {
         userList.add(new User("user2", "password"));
     }
 
-
+    static User currentUser;
     public static boolean addUser(User user) {
         userList.add(user);
         return true;
@@ -52,8 +52,11 @@ public class UserService {
         for(int i=0;i<userList.size();i++){
             User user = userList.get(i);
             if(user.getUserName().equals(userName)&&user.getPassword().equals(password)){
+                currentUser=user;
                 return user;
             }
         }return null;
+    }static public User getCurrentUser(){
+        return currentUser;
     }
 }

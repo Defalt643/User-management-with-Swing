@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package com.defalt.usermanagement;
+
 /**
  *
  * @author ming
@@ -13,8 +14,9 @@ public class LoginPanel extends javax.swing.JPanel {
     /**
      * Creates new form loginPanel
      */
-    public LoginPanel() {
+    public LoginPanel(MainFrame mainFrame) {
         initComponents();
+        this.mainFrame=mainFrame;
     }
 
     /**
@@ -104,21 +106,26 @@ public class LoginPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void inputPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputPasswordActionPerformed
-        
+
     }//GEN-LAST:event_inputPasswordActionPerformed
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        String userName =inputUsername.getText();
+        String userName = inputUsername.getText();
         String password = new String(inputPassword.getPassword());
         User user = UserService.auth(userName, password);
-        if(user!=null){
-            System.out.println("Logged in as "+user.getUserName());
-        }else{
+        if (user != null) {
+            System.out.println("Logged in as " + user.getUserName());
+            currentUser=user;
+            mainFrame.switchToUserPanel();
+        } else {
             displayErrorMessage.setText("The credentials you are using are invlid.");
         }
     }//GEN-LAST:event_loginButtonActionPerformed
-
-
+    public User getCurrentUser(){
+        return currentUser;
+    }
+    User currentUser;
+    MainFrame mainFrame;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel displayErrorMessage;
     private javax.swing.JPasswordField inputPassword;
